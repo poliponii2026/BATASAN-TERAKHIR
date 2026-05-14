@@ -409,13 +409,6 @@ text-shadow:3px 3px 0 #000;
 margin-bottom:20px;
 }
 
-.realTimer{
-font-size:2rem;
-font-weight:900;
-margin-top:20px;
-color:#ff5a1f;
-}
-
 /* PROGRESS */
 
 .progressWrap{
@@ -578,10 +571,6 @@ font-size:4.5rem;
 font-size:2rem;
 }
 
-.realTimer{
-font-size:1.5rem;
-}
-
 .stats{
 grid-template-columns:1fr;
 }
@@ -678,12 +667,8 @@ Antrian dapat berubah sewaktu-waktu karena traffic tinggi
 <div class="progress" id="progress"></div>
 </div>
 
-<div class="realTimer" id="realTimer">
-05:00
-</div>
-
 <div class="ticket">
-🔥 AKSES PEMBELIAN AKAN TERBUKA SETELAH TIMER SELESAI
+🔥 AKSES PEMBELIAN AKAN TERBUKA OTOMATIS
 </div>
 
 </div>
@@ -837,14 +822,11 @@ document.title === 'POLIPONI 2026 • WAITING ROOM'
 },1500);
 
 /* ========================= */
-/* REAL 5 MINUTE TIMER */
+/* REAL 5 MINUTES SYSTEM */
 /* ========================= */
 
 const buyBtn =
 document.getElementById('buyBtn');
-
-const timer =
-document.getElementById('realTimer');
 
 const progress =
 document.getElementById('progress');
@@ -855,15 +837,6 @@ let current = duration;
 const countdown = setInterval(()=>{
 
 current--;
-
-const minutes =
-Math.floor(current / 60);
-
-const seconds =
-current % 60;
-
-timer.innerText =
-`${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
 
 /* PROGRESS */
 
@@ -879,13 +852,14 @@ if(current <= 0){
 
 clearInterval(countdown);
 
-timer.innerText =
-'AKSES TERBUKA';
+/* AKTIFKAN TOMBOL */
 
 buyBtn.classList.add('active');
 
 buyBtn.innerText =
 'MASUK KE PEMBELIAN TIKET';
+
+/* REDIRECT OTOMATIS */
 
 window.location.href =
 'https://poliponii2026.github.io/POLIPONI-ID/';
