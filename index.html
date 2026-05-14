@@ -409,6 +409,13 @@ text-shadow:3px 3px 0 #000;
 margin-bottom:20px;
 }
 
+.realTimer{
+font-size:2rem;
+font-weight:900;
+margin-top:20px;
+color:#ff5a1f;
+}
+
 /* PROGRESS */
 
 .progressWrap{
@@ -423,8 +430,8 @@ overflow:hidden;
 height:100%;
 width:0%;
 background:linear-gradient(90deg,#ff5a1f,#ffe600,#00d63b);
-animation:load 300s linear forwards;
 position:relative;
+transition:width 1s linear;
 }
 
 .progress::after{
@@ -442,15 +449,6 @@ animation:shine 1.2s infinite;
 @keyframes shine{
 100%{
 left:140%;
-}
-}
-
-@keyframes load{
-from{
-width:0%;
-}
-to{
-width:100%;
 }
 }
 
@@ -517,39 +515,12 @@ font-weight:700;
 margin-top:5px;
 }
 
-/* POPUPS */
-
-.popup{
-position:fixed;
-right:20px;
-bottom:20px;
-background:#fff;
-border:5px solid #000;
-padding:16px;
-box-shadow:8px 8px 0 #000;
-font-weight:700;
-max-width:280px;
-z-index:100;
-animation:slideUp .5s ease;
-}
-
-@keyframes slideUp{
-from{
-transform:translateY(100px);
-opacity:0;
-}
-to{
-transform:translateY(0);
-opacity:1;
-}
-}
-
 /* BUTTON */
 
 .btn{
 display:block;
 width:100%;
-background:#00d9ff;
+background:#999;
 border:6px solid #000;
 padding:26px;
 font-size:1.2rem;
@@ -559,9 +530,19 @@ color:#000;
 text-align:center;
 box-shadow:12px 12px 0 #000;
 transition:.3s;
+pointer-events:none;
+opacity:.6;
+cursor:not-allowed;
 }
 
-.btn:hover{
+.btn.active{
+background:#00d9ff;
+pointer-events:auto;
+opacity:1;
+cursor:pointer;
+}
+
+.btn.active:hover{
 transform:translate(-5px,-5px);
 box-shadow:18px 18px 0 #000;
 }
@@ -595,6 +576,10 @@ font-size:4.5rem;
 
 .fakeTime{
 font-size:2rem;
+}
+
+.realTimer{
+font-size:1.5rem;
 }
 
 .stats{
@@ -690,11 +675,15 @@ Antrian dapat berubah sewaktu-waktu karena traffic tinggi
 </div>
 
 <div class="progressWrap">
-<div class="progress"></div>
+<div class="progress" id="progress"></div>
+</div>
+
+<div class="realTimer" id="realTimer">
+05:00
 </div>
 
 <div class="ticket">
-🔥 SISA TIKET TAMBAHAN HAMPIR HABIS
+🔥 AKSES PEMBELIAN AKAN TERBUKA SETELAH TIMER SELESAI
 </div>
 
 </div>
@@ -722,8 +711,10 @@ Antrian dapat berubah sewaktu-waktu karena traffic tinggi
 
 </div>
 
-<a href="https://poliponii2026.github.io/Deskripsi-poliponi/" class="btn">
-MASUK KE PEMBELIAN TIKET
+<a href="https://poliponii2026.github.io/POLIPONI-ID/"
+class="btn"
+id="buyBtn">
+MENUNGGU AKSES PEMBELIAN...
 </a>
 
 </div>
@@ -734,10 +725,6 @@ POLIPONI BALI 2026 • OFFICIAL WAITING ROOM
 
 </div>
 
-</div>
-
-<div class="popup" id="popup">
-🔥 7 orang baru saja membeli tiket Premium
 </div>
 
 <script>
@@ -838,34 +825,6 @@ increase('premium',1,4);
 increase('festival',1,5);
 increase('online',5,20);
 
-/* POPUP */
-
-const popup = document.getElementById('popup');
-
-const popupMessages = [
-
-'🔥 7 orang baru saja membeli tiket Premium',
-'⚡ Tiket Festival hampir sold out',
-'🎫 13 pengguna baru masuk waiting room',
-'🚨 Traffic meningkat drastis',
-'🔥 4 tiket Fast Track baru saja terjual'
-
-];
-
-setInterval(()=>{
-
-let random = Math.floor(Math.random()*popupMessages.length);
-
-popup.innerHTML = popupMessages[random];
-
-popup.style.display = 'block';
-
-setTimeout(()=>{
-popup.style.display = 'none';
-},4000);
-
-},7000);
-
 /* TITLE */
 
 setInterval(()=>{
@@ -877,14 +836,63 @@ document.title === 'POLIPONI 2026 • WAITING ROOM'
 
 },1500);
 
-/* AUTO REDIRECT */
+/* ========================= */
+/* REAL 5 MINUTE TIMER */
+/* ========================= */
 
-setTimeout(()=>{
+const buyBtn =
+document.getElementById('buyBtn');
+
+const timer =
+document.getElementById('realTimer');
+
+const progress =
+document.getElementById('progress');
+
+let duration = 300;
+let current = duration;
+
+const countdown = setInterval(()=>{
+
+current--;
+
+const minutes =
+Math.floor(current / 60);
+
+const seconds =
+current % 60;
+
+timer.innerText =
+`${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+
+/* PROGRESS */
+
+const percent =
+((duration - current) / duration) * 100;
+
+progress.style.width =
+percent + '%';
+
+/* FINISH */
+
+if(current <= 0){
+
+clearInterval(countdown);
+
+timer.innerText =
+'AKSES TERBUKA';
+
+buyBtn.classList.add('active');
+
+buyBtn.innerText =
+'MASUK KE PEMBELIAN TIKET';
 
 window.location.href =
 'https://poliponii2026.github.io/POLIPONI-ID/';
 
-},300000);
+}
+
+},1000);
 
 </script>
 
